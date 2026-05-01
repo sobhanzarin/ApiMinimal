@@ -1,25 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiMinimal.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiMinimal.Controllers
 {
-    [ApiController]
     [Route("api/cities")]
+    [ApiController]
     public class CitiesController : ControllerBase
     {
         [HttpGet]
-        public JsonResult GetCities()
+        public ActionResult<CityDto> GetCities()
         {
-            return new JsonResult(
-                CityDataStore.Current.Cities
-                );
+           var cities = CityDataStore.Current.Cities;
+            return Ok(cities);
         }
         [HttpGet("{id}")]
-        public JsonResult GetCity(int id)
+        public ActionResult<CityDto> GetCity(int id)
         {
-            return new JsonResult(
-                CityDataStore.Current.Cities
-                .FirstOrDefault( x => x.Id == id )
-                );
+            var cityToResult = CityDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
+            if(cityToResult == null) 
+                return NotFound();
+            return Ok(cityToResult);
         }
     }
 }
